@@ -39,6 +39,23 @@
             line-height: 1;
             color: #89CFF3;
         }
+        .llm-button {
+            background-color: #0079FF;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .llm-button:hover {
+            background-color: #004AAD;
+        }
+        .llm-button:disabled {
+            background-color: #A2D2FF;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -82,7 +99,8 @@
                     <h3 class="text-3xl font-bold text-[#004AAD] mb-4">🧊 Apache Iceberg</h3>
                     <p class="text-gray-600 mb-6">The open table format for huge analytic datasets in data lakes. Iceberg brings the reliability of SQL tables with ACID transactions, schema evolution, and time travel to your data lake.</p>
                     <ul class="space-y-3">
-                        <li class="flex items-center"><span class="text-xl mr-3">✅</span> <strong>ACID Compliance:</strong> Guarantees data integrity at scale.</li>
+                        <li class="flex items-center"><span class="text-xl mr-3">✅</span> <strong>ACID Compliance:</strong> Guarantees data integrity at scale. <button class="llm-button text-sm ml-2" onclick="explainConcept('ACID Compliance', 'acidExplanation')">✨ Explain</button></li>
+                        <li class="text-gray-600 text-sm mt-1 mb-2 hidden" id="acidExplanation"></li>
                         <li class="flex items-center"><span class="text-xl mr-3">⏳</span> <strong>Time Travel:</strong> Query historical data and rollback changes.</li>
                         <li class="flex items-center"><span class="text-xl mr-3">⚙️</span> <strong>Broad Engine Support:</strong> Works with Spark, Trino, Flink, and more.</li>
                         <li class="flex items-center"><span class="text-xl mr-3">🔍</span> <strong>Optimized for Scans:</strong> Excels at large-scale analytical queries.</li>
@@ -93,7 +111,8 @@
                     <p class="text-gray-600 mb-6">A modern, AI-native columnar format for ML and vector search. Lance is built for performance, optimized for multimodal data, and designed for the unique demands of AI workloads.</p>
                     <ul class="space-y-3">
                         <li class="flex items-center"><span class="text-xl mr-3">⚡️</span> <strong>Fast Random Access:</strong> Up to 100x faster than Parquet.</li>
-                        <li class="flex items-center"><span class="text-xl mr-3">🧠</span> <strong>Vector Search:</strong> Sub-millisecond nearest neighbor search.</li>
+                        <li class="flex items-center"><span class="text-xl mr-3">🧠</span> <strong>Vector Search:</strong> Sub-millisecond nearest neighbor search. <button class="llm-button text-sm ml-2" onclick="explainConcept('Vector Search', 'vectorExplanation')">✨ Explain</button></li>
+                        <li class="text-gray-600 text-sm mt-1 mb-2 hidden" id="vectorExplanation"></li>
                         <li class="flex items-center"><span class="text-xl mr-3">📸</span> <strong>Multimodal Data:</strong> Natively handles images, video, text, and vectors.</li>
                          <li class="flex items-center"><span class="text-xl mr-3">📦</span> <strong>Zero-Copy Versioning:</strong> Automatic, efficient data versioning for ML.</li>
                     </ul>
@@ -145,6 +164,11 @@
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold">Forging the Alliance: Two Integration Pathways</h2>
                 <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-4">Integration is actively being explored in two primary ways, allowing organizations to leverage the strengths of both technologies within a unified system.</p>
+                <button class="llm-button mt-6" id="generateUseCaseBtn">✨ Generate a Combined Use Case</button>
+                <div id="useCaseOutput" class="bg-white rounded-xl shadow-lg p-6 mt-8 text-left hidden">
+                    <p class="text-gray-700 leading-relaxed" id="useCaseText"></p>
+                    <div id="useCaseLoading" class="hidden text-center text-gray-500 mt-4">Generating...</div>
+                </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-white rounded-xl shadow-lg p-8">
@@ -340,6 +364,74 @@
             });
         });
 
+        // Gemini API Integration
+        async function callGeminiAPI(prompt) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistory };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("Gemini API returned an unexpected structure:", result);
+                    return "Could not generate response. Please try again.";
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                return "Failed to connect to the AI service. Please check your network.";
+            }
+        }
+
+        // Feature 1: Generate Combined Use Case
+        const generateUseCaseBtn = document.getElementById('generateUseCaseBtn');
+        const useCaseOutputDiv = document.getElementById('useCaseOutput');
+        const useCaseText = document.getElementById('useCaseText');
+        const useCaseLoading = document.getElementById('useCaseLoading');
+
+        generateUseCaseBtn.addEventListener('click', async () => {
+            generateUseCaseBtn.disabled = true;
+            useCaseOutputDiv.classList.remove('hidden');
+            useCaseText.textContent = '';
+            useCaseLoading.classList.remove('hidden');
+
+            const prompt = `Given Apache Iceberg's strengths in data governance, ACID transactions, and broad engine support for analytical queries, and Lance's strengths in fast random access, vector search, and multimodal data handling for AI/ML workloads, suggest a novel, real-world use case where these two technologies are integrated to solve a complex data problem. Focus on the combined benefits and how each technology contributes.`;
+
+            const generatedText = await callGeminiAPI(prompt);
+            useCaseText.textContent = generatedText;
+            useCaseLoading.classList.add('hidden');
+            generateUseCaseBtn.disabled = false;
+        });
+
+        // Feature 2: Explain Concept
+        async function explainConcept(concept, outputElementId) {
+            const outputElement = document.getElementById(outputElementId);
+            const button = outputElement.previousElementSibling.querySelector('button'); // Get the button associated with this explanation
+
+            if (outputElement.classList.contains('hidden')) {
+                button.disabled = true;
+                outputElement.classList.remove('hidden');
+                outputElement.textContent = 'Explaining...';
+
+                const prompt = `Explain "${concept}" in the context of data lakes and modern data architectures, in 2-3 concise sentences.`;
+                const explanation = await callGeminiAPI(prompt);
+                outputElement.textContent = explanation;
+                button.disabled = false;
+            } else {
+                outputElement.classList.add('hidden');
+                outputElement.textContent = '';
+            }
+        }
     </script>
 </body>
 </html>
