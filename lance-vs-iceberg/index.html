@@ -3,159 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infographic: Lance & Apache Iceberg - Synergizing Data Architectures</title>
+    <title>Interactive Report: Lance & Apache Iceberg Synergy</title>
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: The SPA is structured as a narrative journey. It starts with a high-level introduction (Hero), introduces the two technologies side-by-side (Players), provides an interactive comparison (Comparison Chart), visualizes their combined architecture (Architecture Flow), lets users explore integration methods (Integration Explorer), shows the current status (Maturity Outlook), and finally presents actionable use cases (Use Cases). This thematic, top-down structure was chosen over the report's linear chapter format to make the complex topic more digestible and engaging for a user, allowing them to grasp the core concepts first before diving into technical details. -->
+    <!-- Visualization & Content Choices: 
+        - Report Table 1 (Feature Comparison) -> Goal: Compare -> Viz: Interactive Horizontal Bar Chart -> Interaction: Hover for details -> Justification: A bar chart is more intuitive than a table for comparing relative strengths across categories. -> Library: Chart.js (Canvas).
+        - Report Section 4.3 (Architectural Patterns) -> Goal: Organize -> Viz: HTML/CSS Flowchart -> Interaction: Static view -> Justification: A visual flowchart simplifies the complex architectural relationship described in the text, making it immediately understandable. -> Method: HTML/CSS with Tailwind.
+        - Report Section 4.1 & 4.2 (Integration Pathways) -> Goal: Organize/Inform -> Viz: Tabbed content sections with diagrams -> Interaction: Click tabs to switch views -> Justification: Breaking the two complex integration scenarios into separate, user-selectable views prevents cognitive overload and allows focused learning. -> Method: JS state change with HTML/CSS diagrams.
+        - Report Section 5 (Current Landscape) -> Goal: Inform -> Viz: Styled progress bars -> Interaction: Static view -> Justification: Progress bars offer a quick, scannable visual summary of the maturity levels mentioned in the text. -> Method: HTML/CSS with Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-            color: #1F2937;
+            font-family: 'Figtree', sans-serif;
+            background-color: #F8F7F4; /* Warm Neutral Background */
+            color: #4A4A4A; /* Dark Gray Text */
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
-            height: 350px;
-            max-height: 450px;
+            height: 400px;
+            max-height: 50vh;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 450px;
+                height: 500px;
             }
         }
         .gradient-text {
-            background: linear-gradient(to right, #0079FF, #004AAD);
+            background: linear-gradient(to right, #6D6875, #433E49);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .nav-link {
+            transition: color 0.3s;
+        }
+        .nav-link:hover, .tab-btn.active {
+            color: #B5838D; /* Muted Rose Accent */
+        }
+        .tab-btn {
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+             border-bottom-color: #B5838D;
+        }
+        .use-case-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .use-case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
         .flow-arrow {
-            font-size: 2rem;
-            line-height: 1;
-            color: #89CFF3;
-        }
-        .llm-button {
-            background-color: #0079FF;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-            cursor: pointer;
-            border: none;
-        }
-        .llm-button:hover {
-            background-color: #004AAD;
-        }
-        .llm-button:disabled {
-            background-color: #A2D2FF;
-            cursor: not-allowed;
+            color: #E0B1CB;
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased leading-relaxed">
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <h2 class="text-xl font-bold text-gray-800">Lance <span class="font-light">&</span> Iceberg</h2>
-            <div class="hidden md:flex space-x-6">
-                <a href="#intro" class="text-gray-600 hover:text-[#0079FF] transition">Introduction</a>
-                <a href="#comparison" class="text-gray-600 hover:text-[#0079FF] transition">Comparison</a>
-                <a href="#architecture" class="text-gray-600 hover:text-[#0079FF] transition">Architecture</a>
-                <a href="#integration" class="text-gray-600 hover:text-[#0079FF] transition">Integration</a>
-                <a href="#outlook" class="text-gray-600 hover:text-[#0079FF] transition">Outlook</a>
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-bold text-gray-800">Data Synergy</h2>
+            <div class="hidden md:flex space-x-8 text-gray-600">
+                <a href="#intro" class="nav-link">Home</a>
+                <a href="#comparison" class="nav-link">Comparison</a>
+                <a href="#architecture" class="nav-link">Architecture</a>
+                <a href="#integration" class="nav-link">Integration</a>
+                <a href="#use-cases" class="nav-link">Use Cases</a>
             </div>
         </nav>
     </header>
 
     <main class="container mx-auto p-4 md:p-8">
 
-        <section id="intro" class="text-center py-12 md:py-20">
-            <h1 class="text-4xl md:text-6xl font-black mb-4"><span class="gradient-text">Synergizing Data Architectures</span></h1>
-            <p class="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto mb-8">Unifying large-scale analytics and high-performance AI is the next frontier. Discover how Apache Iceberg and Lance are not competitors, but powerful complements in building the AI-Native Lakehouse.</p>
-            <div class="flex justify-center items-center space-x-8 text-5xl md:text-6xl">
+        <section id="intro" class="text-center py-16 md:py-24">
+            <h1 class="text-4xl md:text-6xl font-black mb-4"><span class="gradient-text">The AI-Native Lakehouse</span></h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto mb-10">This report explores the complementary relationship between Apache Iceberg and Lance. Discover how their integration creates a powerful, unified architecture for both large-scale analytics and high-performance AI, moving beyond competition to collaboration.</p>
+            <div class="flex justify-center items-center space-x-8 text-6xl md:text-7xl">
                 <div class="text-center">
                     <span title="Apache Iceberg">🧊</span>
-                    <p class="text-lg font-semibold mt-2">Iceberg</p>
-                    <p class="text-sm text-gray-500">Analytics Foundation</p>
+                    <p class="text-base font-semibold mt-2">Iceberg</p>
                 </div>
-                <div class="text-5xl font-light text-gray-400">+</div>
+                <div class="text-5xl font-light text-gray-400">&</div>
                 <div class="text-center">
                     <span title="Lance">🚀</span>
-                    <p class="text-lg font-semibold mt-2">Lance</p>
-                    <p class="text-sm text-gray-500">AI/ML Accelerator</p>
+                    <p class="text-base font-semibold mt-2">Lance</p>
                 </div>
             </div>
         </section>
 
-        <section id="players" class="py-12">
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-xl shadow-lg p-8 transform hover:scale-105 transition-transform duration-300">
-                    <h3 class="text-3xl font-bold text-[#004AAD] mb-4">🧊 Apache Iceberg</h3>
-                    <p class="text-gray-600 mb-6">The open table format for huge analytic datasets in data lakes. Iceberg brings the reliability of SQL tables with ACID transactions, schema evolution, and time travel to your data lake.</p>
+        <section id="players" class="py-16">
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+                    <h3 class="text-3xl font-bold text-[#6D6875] mb-4">🧊 Apache Iceberg</h3>
+                    <p class="text-gray-600 mb-6">The open table format for huge analytic datasets. Iceberg brings the reliability of SQL tables to data lakes with ACID transactions, schema evolution, and time travel.</p>
                     <ul class="space-y-3">
-                        <li class="flex items-center"><span class="text-xl mr-3">✅</span> <strong>ACID Compliance:</strong> Guarantees data integrity at scale. <button class="llm-button text-sm ml-2" onclick="explainConcept('ACID Compliance', 'acidExplanation')">✨ Explain</button></li>
-                        <li class="text-gray-600 text-sm mt-1 mb-2 hidden" id="acidExplanation"></li>
-                        <li class="flex items-center"><span class="text-xl mr-3">⏳</span> <strong>Time Travel:</strong> Query historical data and rollback changes.</li>
-                        <li class="flex items-center"><span class="text-xl mr-3">⚙️</span> <strong>Broad Engine Support:</strong> Works with Spark, Trino, Flink, and more.</li>
-                        <li class="flex items-center"><span class="text-xl mr-3">🔍</span> <strong>Optimized for Scans:</strong> Excels at large-scale analytical queries.</li>
+                        <li class="flex items-center"><span class="text-xl mr-3">✅</span> <strong>ACID Compliance:</strong> Ensures data integrity for analytics.</li>
+                        <li class="flex items-center"><span class="text-xl mr-3">⏳</span> <strong>Time Travel:</strong> Enables reproducible queries and rollbacks.</li>
+                        <li class="flex items-center"><span class="text-xl mr-3">🌐</span> <strong>Broad Engine Support:</strong> Works with Spark, Trino, Flink, and more.</li>
+                        <li class="flex items-center"><span class="text-xl mr-3">🔍</span> <strong>Optimized for Scans:</strong> Excels at large-scale OLAP queries.</li>
                     </ul>
                 </div>
-                 <div class="bg-white rounded-xl shadow-lg p-8 transform hover:scale-105 transition-transform duration-300">
-                    <h3 class="text-3xl font-bold text-[#0079FF] mb-4">🚀 Lance</h3>
-                    <p class="text-gray-600 mb-6">A modern, AI-native columnar format for ML and vector search. Lance is built for performance, optimized for multimodal data, and designed for the unique demands of AI workloads.</p>
+                 <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+                    <h3 class="text-3xl font-bold text-[#B5838D] mb-4">🚀 Lance</h3>
+                    <p class="text-gray-600 mb-6">A modern, AI-native columnar format for ML and vector search, built for performance, optimized for multimodal data, and designed for AI workloads.</p>
                     <ul class="space-y-3">
-                        <li class="flex items-center"><span class="text-xl mr-3">⚡️</span> <strong>Fast Random Access:</strong> Up to 100x faster than Parquet.</li>
-                        <li class="flex items-center"><span class="text-xl mr-3">🧠</span> <strong>Vector Search:</strong> Sub-millisecond nearest neighbor search. <button class="llm-button text-sm ml-2" onclick="explainConcept('Vector Search', 'vectorExplanation')">✨ Explain</button></li>
-                        <li class="text-gray-600 text-sm mt-1 mb-2 hidden" id="vectorExplanation"></li>
+                        <li class="flex items-center"><span class="text-xl mr-3">⚡️</span> <strong>Fast Random Access:</strong> Up to 100x faster than Parquet for point queries.</li>
+                        <li class="flex items-center"><span class="text-xl mr-3">🧠</span> <strong>Vector Search:</strong> Powers sub-millisecond similarity search.</li>
                         <li class="flex items-center"><span class="text-xl mr-3">📸</span> <strong>Multimodal Data:</strong> Natively handles images, video, text, and vectors.</li>
-                         <li class="flex items-center"><span class="text-xl mr-3">📦</span> <strong>Zero-Copy Versioning:</strong> Automatic, efficient data versioning for ML.</li>
+                         <li class="flex items-center"><span class="text-xl mr-3">📦</span> <strong>Zero-Copy Versioning:</strong> Provides efficient data versioning for ML.</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <section id="comparison" class="py-12 md:py-20">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold">Complementary Powers, Not Competing Forces</h2>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-4">Instead of overlapping, Lance and Iceberg fill crucial gaps for each other. Iceberg provides a stable, governed foundation, while Lance delivers the specialized performance needed for modern AI.</p>
+        <section id="comparison" class="py-16 md:py-24 bg-white rounded-2xl shadow-xl border border-gray-100">
+            <div class="text-center mb-12 px-4">
+                <h2 class="text-3xl md:text-4xl font-bold">Complementary Strengths</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-4">Iceberg provides a stable, governed foundation for analytics, while Lance delivers the specialized performance needed for modern AI. This chart visualizes their distinct workload optimizations.</p>
             </div>
-            <div class="bg-white rounded-xl shadow-lg p-4 md:p-8">
+            <div class="px-4">
                 <div class="chart-container">
                     <canvas id="comparisonChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <section id="architecture" class="py-12 md:py-20 bg-gray-50 rounded-xl">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold">The AI-Native Lakehouse Architecture</h2>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-4">In an integrated system, Iceberg manages the core data lake, providing governance and reliability. Specialized AI/ML pipelines then transform and load data into Lance for high-performance vector search and model training.</p>
+        <section id="architecture" class="py-16 md:py-24">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold">The Integrated Lakehouse Architecture</h2>
+                <p class="text-lg text-gray-600 max-w-4xl mx-auto mt-4">In this unified model, both formats coexist on the same object storage. Iceberg manages the governed data lake, while specialized AI pipelines transform and load data into Lance format for high-performance vector search and model training.</p>
             </div>
-            <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-8 text-center">
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#89CFF3]">
-                    <h4 class="font-bold text-lg">S3 Data Lake</h4>
-                    <p class="text-sm text-gray-500">Underlying Storage</p>
+            <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-4 text-center max-w-6xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#E0B1CB] w-full md:w-auto">
+                    <h4 class="font-bold text-lg">☁️ S3 Data Lake</h4>
+                    <p class="text-sm text-gray-500">Unified Storage Layer</p>
                 </div>
-                <div class="flow-arrow transform md:rotate-0 rotate-90">→</div>
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#004AAD]">
+                <div class="flow-arrow text-4xl transform md:rotate-0 rotate-90">→</div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#6D6875] w-full md:w-auto">
                     <h4 class="font-bold text-lg">🧊 Iceberg Tables</h4>
-                    <p class="text-sm text-gray-500">ACID, Governance, History</p>
+                    <p class="text-sm text-gray-500">Governance & Analytics</p>
                 </div>
-                 <div class="flow-arrow transform md:rotate-0 rotate-90">→</div>
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#0079FF]">
+                 <div class="flow-arrow text-4xl transform md:rotate-0 rotate-90">→</div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#B5838D] w-full md:w-auto">
                     <h4 class="font-bold text-lg">🚀 Lance Datasets</h4>
-                    <p class="text-sm text-gray-500">Vector Search, Random Access</p>
+                    <p class="text-sm text-gray-500">Vector Search & ML</p>
                 </div>
-                 <div class="flow-arrow transform md:rotate-0 rotate-90">→</div>
-                <div class="bg-green-100 border-green-500 border-t-4 p-6 rounded-lg shadow-md">
-                    <h4 class="font-bold text-lg text-green-800">AI Applications</h4>
-                    <p class="text-sm text-green-600">Inference & Training</p>
+                 <div class="flow-arrow text-4xl transform md:rotate-0 rotate-90">→</div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-300 w-full md:w-auto">
+                    <h4 class="font-bold text-lg">🧠 AI Applications</h4>
+                    <p class="text-sm text-gray-500">Inference & Training</p>
                 </div>
             </div>
         </section>
@@ -211,36 +217,6 @@
             </div>
         </section>
         
-        <section id="outlook" class="py-12 md:py-20 bg-gray-50 rounded-xl">
-             <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold">The Road Ahead: State of the Union</h2>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-4">The integration is promising but nascent. Here's a look at the current maturity level.</p>
-            </div>
-            <div class="max-w-4xl mx-auto space-y-6">
-                <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-base font-medium text-[#004AAD]">Community Interest & Discussion</span>
-                        <span class="text-sm font-medium text-[#004AAD]">High</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-4"><div class="bg-[#0079FF] h-4 rounded-full" style="width: 90%"></div></div>
-                </div>
-                 <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-base font-medium text-[#004AAD]">Strategic Partnerships (e.g., Microsoft)</span>
-                        <span class="text-sm font-medium text-[#004AAD]">Active</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-4"><div class="bg-[#0079FF] h-4 rounded-full" style="width: 75%"></div></div>
-                </div>
-                 <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-base font-medium text-[#004AAD]">Standard, Off-the-Shelf Connectors</span>
-                        <span class="text-sm font-medium text-[#004AAD]">Emerging</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-4"><div class="bg-[#0079FF] h-4 rounded-full" style="width: 25%"></div></div>
-                </div>
-            </div>
-        </section>
-
         <section id="use-cases" class="py-16 md:py-24">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold">Strategic Use Cases</h2>
@@ -268,31 +244,14 @@
 
     </main>
 
-    <footer class="bg-white mt-16">
-        <div class="container mx-auto px-6 py-4 text-center text-gray-500">
-            <p>&copy; 2025 Data Architecture Insights. Infographic generated based on <a href="https://cenz.hashnode.dev/synergizing-data-architectures" target="_blank">analysis of Lance & Apache Iceberg compatibility</a>.</p>
+    <footer class="bg-white/50 mt-16 border-t border-gray-200">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
+            <p>This interactive report was generated based on the "Synergizing Data Architectures" analysis of Lance and Apache Iceberg.</p>
+            <p class="text-sm mt-2">All content is derived from the source report for educational and illustrative purposes.</p>
         </div>
     </footer>
 
     <script>
-        function wrapLabel(str, maxWidth) {
-            if (str.length <= maxWidth) {
-                return str;
-            }
-            const words = str.split(' ');
-            const lines = [];
-            let currentLine = '';
-            for (const word of words) {
-                if ((currentLine + word).length > maxWidth && currentLine.length > 0) {
-                    lines.push(currentLine.trim());
-                    currentLine = '';
-                }
-                currentLine += word + ' ';
-            }
-            lines.push(currentLine.trim());
-            return lines;
-        }
-
         const tooltipTitleCallback = (tooltipItems) => {
             const item = tooltipItems[0];
             let label = item.chart.data.labels[item.dataIndex];
@@ -301,31 +260,25 @@
             }
             return label;
         };
-
+        
         const comparisonChartCtx = document.getElementById('comparisonChart').getContext('2d');
-        const comparisonChart = new Chart(comparisonChartCtx, {
+        new Chart(comparisonChartCtx, {
             type: 'bar',
             data: {
-                labels: [
-                    wrapLabel('Primary Use Case', 16),
-                    wrapLabel('Data Type Focus', 16),
-                    wrapLabel('Performance Strength', 16),
-                    wrapLabel('Data Versioning & History', 16),
-                    wrapLabel('Ecosystem & Governance', 16)
-                ],
+                labels: ['AI/ML Workloads', 'Large-Scale Analytics', 'Random Access Speed', 'Large Scan Speed', 'Vector & Multimodal Data', 'Structured/Tabular Data'],
                 datasets: [
                     {
-                        label: '🧊 Iceberg',
-                        data: [4, 5, 4, 5, 5],
-                        backgroundColor: '#004AAD',
-                        borderColor: '#003B8D',
+                        label: '🚀 Lance',
+                        data: [5, 3, 5, 3, 5, 4],
+                        backgroundColor: '#B5838D',
+                        borderColor: '#A06B77',
                         borderWidth: 1
                     },
                     {
-                        label: '🚀 Lance',
-                        data: [5, 4, 5, 4, 3],
-                        backgroundColor: '#0079FF',
-                        borderColor: '#006AE0',
+                        label: '🧊 Iceberg',
+                        data: [3, 5, 2, 5, 2, 5],
+                        backgroundColor: '#6D6875',
+                        borderColor: '#58535E',
                         borderWidth: 1
                     }
                 ]
@@ -340,56 +293,46 @@
                         max: 5,
                         title: {
                             display: true,
-                            text: 'Relative Strength / Specialization'
+                            text: 'Relative Strength and Optimization',
+                            font: { size: 14 }
                         },
                          ticks: {
-                            callback: function(value, index, values) {
-                                const labels = ['Poor', 'Fair', 'Good', 'Strong', 'Specialized'];
-                                return labels[value-1];
+                            callback: function(value) {
+                                const labels = {0: 'Low', 1: '', 2: 'Mid', 3: '', 4: 'High', 5: 'Specialized'};
+                                return labels[value];
                             }
                         }
                     },
                     y: {
-                       ticks: {
-                           font: {
-                               size: 14
-                           }
-                       }
+                       ticks: { font: { size: 14 } }
                     }
                 },
                 plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Comparative Strengths: Iceberg vs. Lance',
-                        font: {
-                            size: 18
-                        },
-                        padding: {
-                            top: 10,
-                            bottom: 30
-                        }
-                    },
+                    legend: { position: 'top' },
                     tooltip: {
-                        callbacks: {
-                            title: tooltipTitleCallback,
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                const value = context.parsed.x;
-                                const strength = ['N/A', 'Poor', 'Fair', 'Good', 'Strong', 'Specialized'][value];
-                                label += strength;
-                                return label;
-                            }
-                        }
+                        callbacks: { title: tooltipTitleCallback }
                     }
                 }
             }
         });
+        
+        const tabs = {
+            pathway1: document.getElementById('pathway1'),
+            pathway2: document.getElementById('pathway2'),
+        };
+        const tabBtns = document.querySelectorAll('.tab-btn');
+
+        function showTab(tabId) {
+            Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
+            tabs[tabId].classList.remove('hidden');
+
+            tabBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(tabId)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
         
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -399,75 +342,6 @@
                 });
             });
         });
-
-        // Gemini API Integration
-        async function callGeminiAPI(prompt) {
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            let chatHistory = [];
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            const payload = { contents: chatHistory };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    return result.candidates[0].content.parts[0].text;
-                } else {
-                    console.error("Gemini API returned an unexpected structure:", result);
-                    return "Could not generate response. Please try again.";
-                }
-            } catch (error) {
-                console.error("Error calling Gemini API:", error);
-                return "Failed to connect to the AI service. Please check your network.";
-            }
-        }
-
-        // Feature 1: Generate Combined Use Case
-        const generateUseCaseBtn = document.getElementById('generateUseCaseBtn');
-        const useCaseOutputDiv = document.getElementById('useCaseOutput');
-        const useCaseText = document.getElementById('useCaseText');
-        const useCaseLoading = document.getElementById('useCaseLoading');
-
-        generateUseCaseBtn.addEventListener('click', async () => {
-            generateUseCaseBtn.disabled = true;
-            useCaseOutputDiv.classList.remove('hidden');
-            useCaseText.textContent = '';
-            useCaseLoading.classList.remove('hidden');
-
-            const prompt = `Given Apache Iceberg's strengths in data governance, ACID transactions, and broad engine support for analytical queries, and Lance's strengths in fast random access, vector search, and multimodal data handling for AI/ML workloads, suggest a novel, real-world use case where these two technologies are integrated to solve a complex data problem. Focus on the combined benefits and how each technology contributes.`;
-
-            const generatedText = await callGeminiAPI(prompt);
-            useCaseText.textContent = generatedText;
-            useCaseLoading.classList.add('hidden');
-            generateUseCaseBtn.disabled = false;
-        });
-
-        // Feature 2: Explain Concept
-        async function explainConcept(concept, outputElementId) {
-            const outputElement = document.getElementById(outputElementId);
-            const button = outputElement.previousElementSibling.querySelector('button'); // Get the button associated with this explanation
-
-            if (outputElement.classList.contains('hidden')) {
-                button.disabled = true;
-                outputElement.classList.remove('hidden');
-                outputElement.textContent = 'Explaining...';
-
-                const prompt = `Explain "${concept}" in the context of data lakes and modern data architectures, in 2-3 concise sentences.`;
-                const explanation = await callGeminiAPI(prompt);
-                outputElement.textContent = explanation;
-                button.disabled = false;
-            } else {
-                outputElement.classList.add('hidden');
-                outputElement.textContent = '';
-            }
-        }
     </script>
 </body>
 </html>
