@@ -160,40 +160,51 @@
             </div>
         </section>
 
-        <section id="integration" class="py-12 md:py-20">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold">Forging the Alliance: Two Integration Pathways</h2>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-4">Integration is actively being explored in two primary ways, allowing organizations to leverage the strengths of both technologies within a unified system.</p>
-                <button class="llm-button mt-6" id="generateUseCaseBtn">✨ Generate a Combined Use Case</button>
-                <div id="useCaseOutput" class="bg-white rounded-xl shadow-lg p-6 mt-8 text-left hidden">
-                    <p class="text-gray-700 leading-relaxed" id="useCaseText"></p>
-                    <div id="useCaseLoading" class="hidden text-center text-gray-500 mt-4">Generating...</div>
-                </div>
+        <section id="integration" class="py-16 md:py-24 bg-white rounded-2xl shadow-xl border border-gray-100">
+            <div class="text-center mb-12 px-4">
+                <h2 class="text-3xl md:text-4xl font-bold">Integration Explorer</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-4">Integration is being explored via two main pathways. Select a tab to see how they connect, their benefits, and the challenges involved.</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-xl shadow-lg p-8">
-                    <h3 class="font-bold text-xl mb-4 text-[#004AAD]">Pathway 1: Lance as a File Format</h3>
-                    <p class="text-gray-600 mb-6">Iceberg's metadata layer points directly to Lance data files instead of Parquet. This extends Iceberg's governance to ML-optimized data.</p>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 space-y-2">
-                        <div class="bg-[#A2D2FF] text-white p-3 rounded font-semibold">Iceberg Table Metadata</div>
-                        <div class="pl-4 text-2xl">↓</div>
-                        <div class="bg-[#BDE0FE] text-gray-800 p-3 rounded font-semibold ml-4">Manifest List</div>
-                        <div class="pl-8 text-2xl">↓</div>
-                        <div class="bg-[#0079FF] text-white p-3 rounded font-semibold ml-8">file.lance</div>
+            <div class="max-w-5xl mx-auto px-4">
+                <div class="flex justify-center border-b border-gray-200 mb-8">
+                    <button class="tab-btn active text-lg font-semibold py-2 px-6" onclick="showTab('pathway1')">Lance as File Format</button>
+                    <button class="tab-btn text-lg font-semibold py-2 px-6" onclick="showTab('pathway2')">Unified Catalog</button>
+                </div>
+                <div id="pathway1" class="tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="font-bold text-xl mb-3 text-gray-800">How it Works</h3>
+                            <p class="text-gray-600 mb-4">Iceberg's metadata layer points directly to Lance data files (`.lance`) instead of Parquet. This extends Iceberg's governance features to ML-optimized data without altering its core management capabilities.</p>
+                            <h3 class="font-bold text-xl mb-3 text-gray-800">Key Benefit</h3>
+                            <p class="text-gray-600">Enables Iceberg tables to leverage Lance's superior performance for random access and vector search, directly addressing a key limitation for ML workloads.</p>
+                        </div>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2">
+                            <div class="bg-[#6D6875] text-white p-3 rounded font-semibold text-center">Iceberg Table Metadata</div>
+                            <div class="text-center text-3xl flow-arrow">↓</div>
+                            <div class="bg-gray-200 text-gray-800 p-3 rounded font-semibold text-center">Manifest List</div>
+                            <div class="text-center text-3xl flow-arrow">↓</div>
+                            <div class="bg-[#B5838D] text-white p-3 rounded font-semibold text-center">file.lance</div>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow-lg p-8">
-                    <h3 class="font-bold text-xl mb-4 text-[#004AAD]">Pathway 2: Unified Catalog Integration</h3>
-                    <p class="text-gray-600 mb-6">An Iceberg-compatible catalog (like a REST catalog) is extended to understand and manage LanceDB tables, providing a single pane of glass.</p>
-                     <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 space-y-2 flex flex-col items-center">
-                        <div class="bg-[#A2D2FF] text-white p-3 rounded font-semibold w-full text-center">Unified Catalog (e.g., Iceberg REST)</div>
-                        <div class="flex w-full justify-around pt-2">
-                             <div class="text-2xl">↙</div>
-                             <div class="text-2xl">↘</div>
+                <div id="pathway2" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="font-bold text-xl mb-3 text-gray-800">How it Works</h3>
+                            <p class="text-gray-600 mb-4">An Iceberg-compatible REST catalog is extended to also understand and manage LanceDB tables. This provides a single API endpoint for discovering and governing both types of datasets.</p>
+                             <h3 class="font-bold text-xl mb-3 text-gray-800">Key Benefit</h3>
+                            <p class="text-gray-600">Creates a "single pane of glass" for data governance, enabling query engines to seamlessly join data across traditional analytic tables and specialized vector datasets.</p>
                         </div>
-                        <div class="flex w-full justify-around">
-                            <div class="bg-[#004AAD] text-white p-3 rounded font-semibold text-center">Iceberg Tables</div>
-                            <div class="bg-[#0079FF] text-white p-3 rounded font-semibold text-center">Lance Tables</div>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2 flex flex-col items-center">
+                            <div class="bg-[#6D6875] text-white p-3 rounded font-semibold w-full text-center">Unified REST Catalog</div>
+                            <div class="flex w-full justify-around pt-2">
+                                 <div class="text-3xl flow-arrow">↙</div>
+                                 <div class="text-3xl flow-arrow">↘</div>
+                            </div>
+                            <div class="flex w-full justify-around space-x-4">
+                                <div class="bg-gray-300 text-gray-900 p-3 rounded font-semibold text-center flex-1">Iceberg Tables</div>
+                                <div class="bg-[#B5838D] text-white p-3 rounded font-semibold text-center flex-1">Lance Tables</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -226,6 +237,31 @@
                         <span class="text-sm font-medium text-[#004AAD]">Emerging</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-4"><div class="bg-[#0079FF] h-4 rounded-full" style="width: 25%"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="use-cases" class="py-16 md:py-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Strategic Use Cases</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-4">Integrating these technologies unlocks powerful capabilities. Explore some of the key scenarios where a combined architecture provides a significant advantage.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                <div class="use-case-card bg-white rounded-lg shadow-md p-6 border border-gray-100">
+                    <h3 class="font-bold text-lg mb-2">Multimodal AI Data Lakes</h3>
+                    <p class="text-gray-600 text-sm">Manage vast volumes of images, video, and text with Iceberg's governance, while using Lance for high-speed, content-based search and retrieval.</p>
+                </div>
+                <div class="use-case-card bg-white rounded-lg shadow-md p-6 border border-gray-100">
+                    <h3 class="font-bold text-lg mb-2">Advanced Feature Stores</h3>
+                    <p class="text-gray-600 text-sm">Use LanceDB for low-latency feature and embedding retrieval for real-time ML, while Iceberg manages the underlying raw and historical data used for training.</p>
+                </div>
+                <div class="use-case-card bg-white rounded-lg shadow-md p-6 border border-gray-100">
+                    <h3 class="font-bold text-lg mb-2">Reproducible ML</h3>
+                    <p class="text-gray-600 text-sm">Combine Lance's detailed versioning with Iceberg's time travel to create a robust foundation for data lineage and auditable, reproducible ML experiments.</p>
+                </div>
+                <div class="use-case-card bg-white rounded-lg shadow-md p-6 border border-gray-100">
+                    <h3 class="font-bold text-lg mb-2">Hybrid Analytics & AI</h3>
+                    <p class="text-gray-600 text-sm">Run standard BI queries on Iceberg tables and complex semantic searches on Lance datasets within a single, unified data lakehouse environment.</p>
                 </div>
             </div>
         </section>
